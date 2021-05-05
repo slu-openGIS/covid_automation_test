@@ -94,6 +94,9 @@ if ((update == last_update$current_date) == FALSE){
   source("source/workflow/14_create_hhs.R") 
 }
 
+# Moving log file to RPi log folder
+system("mv /home/pi/repos/covid_automation_test/build_AM_TEST.log /home/pi/logs/")
+
 # ==== # === # === # === # === # === # === # === # === # === # === # === # === #
 
 # optionally pushed to GitHub
@@ -108,4 +111,4 @@ if ((update == last_update$current_date) == FALSE){
 # ==== # === # === # === # === # === # === # === # === # === # === # === # === #
 
 # clean-up ####
-rm(date, update, get_last_update)
+rm(date, update, get_last_update, last_update)
