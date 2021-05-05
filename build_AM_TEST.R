@@ -108,4 +108,4 @@ if ((update == last_update$current_date) == FALSE){
 # ==== # === # === # === # === # === # === # === # === # === # === # === # === #
 
 # clean-up ####
-rm(date, auto_update, update, q, get_last_update)
+rm(date, update, get_last_update)
