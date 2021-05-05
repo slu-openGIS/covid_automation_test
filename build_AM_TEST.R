@@ -101,7 +101,7 @@ if (auto_update == TRUE){
   
   system("git add -A")
   system(paste0("git commit -a -m 'build am data for ", as.character(date+1), "'"))
-  system("git push origin master")
+  system("git push")
   
 }
 
