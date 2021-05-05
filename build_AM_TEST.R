@@ -19,15 +19,15 @@ setwd("~/repos/covid_automation_test/")
 source("source/functions/get_last_update.R")
 
 ## check last update
-q <- get_last_update(source = "New York Times")
+#q <- get_last_update(source = "New York Times")
 
 ## evaluate last update
-if (q == FALSE){
-  stop("AM update aborted!")
-}
+#if (q == FALSE){
+#  stop("AM update aborted!")
+#}
 
 ## confirm auto update data
-auto_update <- usethis::ui_yeah("Do you want to automatically update the remote GitHub repo?")
+#auto_update <- usethis::ui_yeah("Do you want to automatically update the remote GitHub repo?")
 
 # ==== # === # === # === # === # === # === # === # === # === # === # === # === #
 
@@ -97,13 +97,13 @@ if ((update == last_update$current_date) == FALSE){
 # ==== # === # === # === # === # === # === # === # === # === # === # === # === #
 
 # optionally pushed to GitHub
-if (auto_update == TRUE){
+#if (auto_update == TRUE){
   
   system("git add -A")
   system(paste0("git commit -a -m 'build am data for ", as.character(date+1), "'"))
   system("git push")
   
-}
+#}
 
 # ==== # === # === # === # === # === # === # === # === # === # === # === # === #
 
