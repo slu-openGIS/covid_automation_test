@@ -12,8 +12,16 @@
 
 # qa prompts ####
 
-## setting working directory to covid_automation repo
-setwd("~/repos/covid_automation_test/")
+## Git pull from repos
+system("cd ~/repos/covid_automation_test && git pull")
+system("cd ~/repos/MO_HEALTH_Covid_Tracking && git pull")
+
+## copying 'data' and 'source' from MO_Health -> covid_automation_test
+system("cp -r ~/repos/MO_HEALTH_Covid_Tracking/data ~/repos/covid_automation_test/")
+system("cp -r ~/repos/MO_HEALTH_Covid_Tracking/source ~/repos/covid_automation_test/")
+
+## set working directory to MO_Health repo
+setwd("~/repos/covid_automation_test")
 
 ## load function
 source("source/functions/get_last_update.R")
@@ -101,7 +109,7 @@ system("mv /home/pi/repos/covid_automation_test/build_AM_TEST.log /home/pi/logs/
 
 # optionally pushed to GitHub
 #if (auto_update == TRUE){
-  
+
   system("git add -A")
   system(paste0("git commit -a -m 'build am data for ", as.character(date+1), "'"))
   system("git push")

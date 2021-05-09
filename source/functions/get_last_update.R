@@ -26,7 +26,7 @@ get_last_update <- function(source){
     
     ## CMS LTC data
     ## return api last update value
-    x <- fromJSON(file = "https://data.cms.gov/api/views/metadata/v1/s2uc-8wxp")
+    x <- rjson::fromJSON(file = "https://data.cms.gov/api/views/metadata/v1/s2uc-8wxp")
     x <- as.Date(x$dataUpdatedAt)
     
     ## return output

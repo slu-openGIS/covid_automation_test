@@ -7,8 +7,6 @@
 #   - Testing data for Missouri and adjacent states (currently paused because
 #     of dashboard changes at the state level)
 #   - Hospitalization data for St. Louis
-#   - Kansas City county breakdowns (currently paused because legacy dashboard 
-#     has not been updated)
 
 #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===#
 
@@ -24,7 +22,8 @@ user <- "Chris"
 date <- Sys.Date()
 
 ## set browser
-browser_name <- "firefox"
+# browser_name <- "firefox"
+browser_name <- "chrome"
 
 #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===#
 
@@ -33,18 +32,25 @@ browser_name <- "firefox"
 ## confirm Franklin County data
 q <- usethis::ui_yeah("Have you added the latest Franklin County ZIP code data to Downloads?")
 
-if (q == FALSE){
-  stop("Please update the filename before proceeding!")
-}
+# if (q == FALSE){
+#  stop("Please update the filename before proceeding!")
+# }
 
 ## confirm St. Louis Pandemic Task Force data
-q <- usethis::ui_yeah("Have you manually updated the Pandemic Task Force data from the latest slides?")
+hospital_update <- usethis::ui_yeah("Have you manually updated the Pandemic Task Force data from the latest slides?")
 
-if (q == FALSE){
-  stop("Please update the hospitalization data manually before proceeding!")
+## confirm vaccine process
+vaccine_race_scrape <- usethis::ui_yeah("Do you want to attempt to scrape the vaccination race data from the State dashboard?")
+
+if (vaccine_race_scrape == FALSE){
+  q <- usethis::ui_yeah("Have you manually updated the vaccination rate data from the State dashboard?")
+  
+  if (q == FALSE){
+    stop("Please update the vaccination race data before proceeding!")
+  }
 }
 
-## confirm St. Louis Pandemic Task Force data
+## confirm Docker started data
 q <- usethis::ui_yeah("Have you started the Docker daemon?")
 
 if (q == FALSE){
@@ -63,7 +69,25 @@ auto_update <- usethis::ui_yeah("Do you want to automatically update the remote 
 # docker image being used is - selenium/standalone-firefox
 # one update might be to use a more modern firefox version - I think this image is pretty old
 
-system("docker run -d -p 4445:4444 selenium/standalone-firefox:2.53.1")
+system("docker run -d -p 4445:4444 selenium/standalone-chrome")
+
+#===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===#
+
+if (vaccine_race_scrape == FALSE){
+  vaccine_race_ethnic <- dplyr::tibble(
+    report_date = rep(date, 7),
+    geoid = rep(29, 7),
+    value = c("American Indian or Alaska Native", "Asian", "Black or African-American",
+              "Multi-racial", "Native Hawaiian or Other Pacific Islander", 
+              "White", "Hispanic or Latino"),
+    initiated = c(4047, 57991, 158690, 
+                  103213, 3964, 
+                  1592974, 91020),
+    completed = c(2741, 38361, 112161,
+                  89208, 2893, 
+                  1276788, 64074)
+  )
+}
 
 #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===#
 
@@ -88,6 +112,8 @@ library(zoo)            # rolling means
 source("source/functions/get_cases.R")        # scrape case/death data (MO)
 source("source/functions/get_demographics.R") # scrape demographic data (MO)
 source("source/functions/get_esri.R")         # scrape ESRI dashboards (generic)
+source("source/functions/get_mo_vacc.R")      # scrape vaccine data (MO / STL)
+source("source/functions/get_mo_vacc_race.R")      # scrape vaccine data (MO / STL)
 source("source/functions/get_tableau.R")      # scrape Tableau dashboards (generic)
 source("source/functions/get_zip.R")          # scrape zip code data (MO / IL / KS)
 source("source/functions/historic_expand.R")  # create empty data for zips by date
@@ -102,11 +128,14 @@ source("source/functions/wrangle_kc_zip.R")   # process zip code data (KC)
 source("source/workflow/06_scrape_zips_selenium.R")
 source("source/workflow/06_scrape_zips.R")
 source("source/workflow/07_create_zips.R")
-# source("source/workflow/08_create_testing.R")
-source("source/workflow/09_create_stl_hospital.R")
-# source("source/workflow/10_create_kc_counties.R")
+
+if (hospital_update == TRUE){
+  source("source/workflow/09_create_stl_hospital.R")
+}
+
 source("source/workflow/12_create_deaths.R")
 source("source/workflow/15_create_demographics.R")
+source("source/workflow/16_create_vaccines.R")  
 
 #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===#
 
@@ -122,7 +151,7 @@ if (auto_update == TRUE){
 #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===#
 
 # clean-up R environment ####
-rm(date, auto_update, user, browser_name)
+rm(date, auto_update, hospital_update, user, browser_name)
 
 #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===# #===#
 
