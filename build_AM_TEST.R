@@ -13,12 +13,22 @@
 # qa prompts ####
 
 ## Git pull from repos
+print("git pull covid_automation_test...")
 system("cd ~/repos/covid_automation_test && git pull")
+print("git pull covid_automation_test complete!")
+
+print("git pull MO_HEALTH_Covid_Tracking...")
 system("cd ~/repos/MO_HEALTH_Covid_Tracking && git pull")
+print("git pull MO_HEALTH_Covid_Tracking complete!")
 
 ## copying 'data' and 'source' from MO_Health -> covid_automation_test
+print("copying MO_HEALTH_Covid_Tracking/data...")
 system("cp -r ~/repos/MO_HEALTH_Covid_Tracking/data ~/repos/covid_automation_test/")
+print("copy /data success!.")
+
+print("copying MO_HEALTH_Covid_Tracking/source...")
 system("cp -r ~/repos/MO_HEALTH_Covid_Tracking/source ~/repos/covid_automation_test/")
+print("copy /source success!.")
 
 ## set working directory to MO_Health repo
 setwd("~/repos/covid_automation_test")
@@ -69,16 +79,25 @@ date <- Sys.Date()-1
 
 # execute daily workflow ####
 
-print("Executing 01")
+print("# ==== # Executing 01 # ==== #")
 source("source/workflow/01_scrape_and_tidy.R")
-print("Executing 02")
+print("# ==== # 01 Complete! # ==== #")
+
+print("# ==== # Executing 02 # ==== #")
 source("source/workflow/02_create_state_msa.R")
-print("Executing 02")
+print("# ==== # 02 Complete! # ==== #")
+
+print("# ==== # Executing 03 # ==== #")
 source("source/workflow/03_add_rates.R")
-print("Executing 04")
+print("# ==== # 03 Complete! # ==== #")
+
+print("# ==== # Executing 04 # ==== #")
 source("source/workflow/04_create_spatial.R")
-print("Executing 05")
+print("# ==== # 04 Complete! # ==== #")
+
+print("# ==== # Executing 05 # ==== #")
 source("source/workflow/05_create_regions.R")
+print("# ==== # 05 Complete! # ==== #")
 
 # ==== # === # === # === # === # === # === # === # === # === # === # === # === #
 
@@ -119,4 +138,4 @@ system("mv /home/pi/repos/covid_automation_test/build_AM_TEST.log /home/pi/logs/
 # ==== # === # === # === # === # === # === # === # === # === # === # === # === #
 
 # clean-up ####
-rm(date, update, get_last_update, last_update)
+rm(date, update, get_last_update)
