@@ -130,7 +130,7 @@ system("mv /home/pi/repos/covid_automation_test/build_AM_TEST.log /home/pi/logs/
 #if (auto_update == TRUE){
 
   system("git add -A")
-  system(paste0("git commit -a -m 'build am data for ", as.character(date+1), "'"))
+  system(paste0("git commit -a -m 'automated build am data for ", as.character(date+1), "'"))
   system("git push")
   
 #}
